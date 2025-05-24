@@ -1,0 +1,44 @@
+files_root: .
+vlnv: "::wb_intercon:0"
+parameters:
+  masters:
+    io:
+      slaves:
+        - rom
+        - sys
+        - spi_flash
+        - spi_accel
+        - ptc
+        - gpio
+        - uart
+        - spi_ts
+        - i2c_ts
+  slaves:
+    rom:
+      offset: 0x00000000
+      size: 0x00001000
+    sys:
+      offset: 0x00001000
+      size: 0x00000040
+    spi_flash:
+      offset: 0x00001040
+      size: 0x00000040
+    spi_accel:
+      offset: 0x00001100
+      size: 0x00000040
+    ptc:
+      offset: 0x00001200
+      size: 0x00000040
+    gpio:
+      offset: 0x00001400
+      size: 0x00000040
+    uart:
+      offset: 0x00002000
+      size: 0x00001000
+    spi_ts:
+      offset: 0x00004000
+      size: 0x00001000
+    i2c_ts:
+      offset: 0x00006000
+      size: 0x00001000
+      
