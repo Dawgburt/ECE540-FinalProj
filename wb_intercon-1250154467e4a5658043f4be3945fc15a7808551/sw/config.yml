@@ -40,5 +40,5 @@ parameters:
       size: 0x00001000
     i2c_ts:
       offset: 0x00006000
-      size: 0x00001000
+      size: 0x00000040
       
