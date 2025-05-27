@@ -1,5 +1,3 @@
-// ======================= i2c_master.v =======================
-// Fully functional I2C master FSM
 module i2c_master (
     input  logic       clk,
     input  logic       rst,
@@ -14,7 +12,7 @@ module i2c_master (
     inout  wire        sda
 );
     typedef enum logic [2:0] {
-        IDLE, START, WRITE_BIT, READ_BIT, ACK_BIT, STOP
+        IDLE, WAIT, START, WRITE_BIT, READ_BIT, ACK_BIT, STOP
     } state_t;
 
     state_t state = IDLE;
@@ -25,74 +23,89 @@ module i2c_master (
     logic [7:0] delay_cnt;
 
     assign sda = sda_out_en ? sda_out : 1'bz;
-    assign scl = delay_cnt < 100 ? 1'b0 : 1'b1;  // crude clock stretch (slow)
-
+    assign scl = (delay_cnt < 100) ? 1'b0 : 1'b1;  // crude clock stretch (slow)
     assign dout = rx_reg;
 
     always_ff @(posedge clk or posedge rst) begin
         if (rst) begin
-            state <= IDLE;
-            done <= 0;
-            sda_out_en <= 0;
-            sda_out <= 1;
-            bit_cnt <= 0;
-            shift_reg <= 0;
-            rx_reg <= 0;
-            delay_cnt <= 0;
+            state       <= IDLE;
+            done        <= 0;
+            sda_out_en  <= 0;
+            sda_out     <= 1;
+            bit_cnt     <= 0;
+            shift_reg   <= 0;
+            rx_reg      <= 0;
+            delay_cnt   <= 0;
         end else begin
             delay_cnt <= delay_cnt + 1;
-            if (delay_cnt < 200) return;
-            delay_cnt <= 0;
 
-            done <= 0;
             case (state)
                 IDLE: begin
-                    sda_out_en <= 0;
-                    sda_out <= 1;
-                    if (start) begin
-                        sda_out <= 0;
+                    delay_cnt   <= 0;
+                    sda_out_en  <= 0;
+                    sda_out     <= 1;
+                    done        <= 0;
+                    if (start)
+                        state <= WAIT;
+                end
+
+                WAIT: begin
+                    if (delay_cnt >= 200) begin
+                        delay_cnt <= 0;
+                        sda_out   <= 0;
                         sda_out_en <= 1;
-                        state <= START;
+                        state     <= START;
                     end
                 end
+
                 START: begin
                     shift_reg <= din;
-                    bit_cnt <= 7;
-                    if (write) state <= WRITE_BIT;
-                    else if (read) state <= READ_BIT;
+                    bit_cnt   <= 7;
+                    if (write)
+                        state <= WRITE_BIT;
+                    else if (read)
+                        state <= READ_BIT;
                 end
+
                 WRITE_BIT: begin
-                    sda_out <= shift_reg[bit_cnt];
-                    sda_out_en <= 1;
-                    if (bit_cnt == 0) state <= ACK_BIT;
-                    else bit_cnt <= bit_cnt - 1;
+                    sda_out     <= shift_reg[bit_cnt];
+                    sda_out_en  <= 1;
+                    if (bit_cnt == 0)
+                        state <= ACK_BIT;
+                    else
+                        bit_cnt <= bit_cnt - 1;
                 end
+
                 READ_BIT: begin
-                    sda_out_en <= 0;
+                    sda_out_en    <= 0;
                     rx_reg[bit_cnt] <= sda;
-                    if (bit_cnt == 0) state <= ACK_BIT;
-                    else bit_cnt <= bit_cnt - 1;
+                    if (bit_cnt == 0)
+                        state <= ACK_BIT;
+                    else
+                        bit_cnt <= bit_cnt - 1;
                 end
+
                 ACK_BIT: begin
                     sda_out_en <= 0;
                     if (stop) begin
                         sda_out_en <= 1;
-                        sda_out <= 0;
-                        state <= STOP;
+                        sda_out    <= 0;
+                        state      <= STOP;
                     end else begin
                         state <= IDLE;
-                        done <= 1;
+                        done  <= 1;
                     end
                 end
+
                 STOP: begin
-                    sda_out <= 1;
-                    sda_out_en <= 1;
-                    state <= IDLE;
-                    done <= 1;
+                    sda_out     <= 1;
+                    sda_out_en  <= 1;
+                    state       <= IDLE;
+                    done        <= 1;
                 end
+
+                default: state <= IDLE;
             endcase
         end
     end
 endmodule
-
-

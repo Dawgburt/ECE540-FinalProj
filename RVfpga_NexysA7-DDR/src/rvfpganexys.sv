@@ -58,6 +58,7 @@ module rvfpganexys
 
     );
 
+
    wire [15:0]         gpio_out;
 
    wire          cpu_tx,litedram_tx;

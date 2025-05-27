@@ -155,7 +155,7 @@ module veerwolf_core
     output wire        o_accel_cs_n,
     output wire        o_accel_mosi,
     input wire         i_accel_miso,
-	output logic scl,
+	output wire scl,
 	inout  wire  sda
 
     );
@@ -326,6 +326,23 @@ module veerwolf_core
 
    wire [7:0]              spi_rdt;
    assign wb_s2m_spi_flash_dat = {24'd0,spi_rdt};
+
+
+wb_i2c_ts i2c_ts_inst (
+    .wb_clk_i      (wb_clk),
+    .wb_rst_i      (wb_rst),
+    .wb_adr_i      (wb_m2s_i2c_ts_adr[7:2]),   // Assuming word-aligned addresses
+    .wb_dat_i      (wb_m2s_i2c_ts_dat),
+    .wb_dat_o      (wb_s2m_i2c_ts_dat),
+    .wb_sel_i      (wb_m2s_i2c_ts_sel),
+    .wb_we_i       (wb_m2s_i2c_ts_we),
+    .wb_cyc_i      (wb_m2s_i2c_ts_cyc),
+    .wb_stb_i      (wb_m2s_i2c_ts_stb),
+    .wb_ack_o      (wb_s2m_i2c_ts_ack),
+    .scl           (scl),
+    .sda           (sda)
+);
+
 
    simple_spi spi
      (// Wishbone slave interface
@@ -805,20 +822,7 @@ module veerwolf_core
       .mbist_mode (1'b0));
 	  
 	  
-	  wb_i2c_ts i2c_ts_inst (
-    .wb_clk_i      (wb_clk_i),
-    .wb_rst_i      (wb_rst_i),
-    .wb_adr_i      (wb_i2c_ts_adr_o),
-    .wb_dat_i      (wb_i2c_ts_dat_o),
-    .wb_dat_o      (wb_i2c_ts_dat_i),
-    .wb_sel_i      (wb_i2c_ts_sel_o),
-    .wb_we_i       (wb_i2c_ts_we_o),
-    .wb_cyc_i      (wb_i2c_ts_cyc_o),
-    .wb_stb_i      (wb_i2c_ts_stb_o),
-    .wb_ack_o      (wb_i2c_ts_ack_i),
-    .scl           (scl),
-    .sda           (sda)
-);
+
 
 
 endmodule

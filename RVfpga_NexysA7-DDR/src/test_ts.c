@@ -1,12 +1,13 @@
-// ======================= touch_ft6336.c =======================
 #include <stdint.h>
-#include "platform.h"
+#include <stdio.h>   // for printf
 
 #define I2C_BASE   0x80006000
 #define REG_CTRL   (*(volatile uint32_t *)(I2C_BASE + 0x00))
 #define REG_TX     (*(volatile uint32_t *)(I2C_BASE + 0x04))
 #define REG_CMD    (*(volatile uint32_t *)(I2C_BASE + 0x08))
 #define REG_RX     (*(volatile uint32_t *)(I2C_BASE + 0x0C))
+
+void init_platform() {}  // dummy stub for compatibility
 
 void i2c_start() { REG_CMD = 0x01; }
 void i2c_write(uint8_t d) { REG_TX = d; REG_CMD = 0x02; }
@@ -24,8 +25,8 @@ void read_touch() {
     i2c_write((0x38 << 1) | 1); // Read mode
 
     for (int i = 0; i < 7; i++) {
-        i2c_read();             // Issue read
-        buf[i] = i2c_rx();      // Capture data
+        i2c_read();
+        buf[i] = i2c_rx();
     }
     i2c_stop();
 
@@ -40,7 +41,8 @@ int main() {
     init_platform();
     while (1) {
         read_touch();
-        for (volatile int d = 0; d < 500000; d++); // Delay
+        for (volatile int d = 0; d < 500000; d++);
     }
     return 0;
 }
+

@@ -51,9 +51,9 @@ module axi_mux #(
   parameter bit          SpillAr       = 1'b1,
   parameter bit          SpillR        = 1'b0
 ) (
-  input  logic                       clk_i,    // Clock
-  input  logic                       rst_ni,   // Asynchronous reset active low
-  input  logic                       test_i,   // Test Mode enable
+  input wire logic                       clk_i,    // Clock
+  input wire logic                       rst_ni,   // Asynchronous reset active low
+  input wire logic                       test_i,   // Test Mode enable
   // slave ports (AXI inputs), connect master modules here
   input  slv_req_t  [NoSlvPorts-1:0] slv_reqs_i,
   output slv_resp_t [NoSlvPorts-1:0] slv_resps_o,

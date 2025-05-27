@@ -64,7 +64,7 @@ set_property -dict { PACKAGE_PIN K13   IOSTANDARD LVCMOS33 } [get_ports { CD }];
 set_property -dict { PACKAGE_PIN P15   IOSTANDARD LVCMOS33 } [get_ports { CE }]; #IO_L13P_T2_MRCC_14 Sch=ce
 set_property -dict { PACKAGE_PIN T11   IOSTANDARD LVCMOS33 } [get_ports { CF }]; #IO_L19P_T3_A10_D26_14 Sch=cf
 set_property -dict { PACKAGE_PIN L18   IOSTANDARD LVCMOS33 } [get_ports { CG }]; #IO_L4P_T0_D04_14 Sch=cg
-#set_property -dict { PACKAGE_PIN H15   IOSTANDARD LVCMOS33 } [get_ports { DP }]; #IO_L19N_T3_A21_VREF_15 Sch=dp
+set_property -dict { PACKAGE_PIN H15   IOSTANDARD LVCMOS33 } [get_ports { DP }]; #IO_L19N_T3_A21_VREF_15 Sch=dp
 set_property -dict { PACKAGE_PIN J17   IOSTANDARD LVCMOS33 } [get_ports { AN[0] }]; #IO_L23P_T3_FOE_B_15 Sch=an[0]
 set_property -dict { PACKAGE_PIN J18   IOSTANDARD LVCMOS33 } [get_ports { AN[1] }]; #IO_L23N_T3_FWE_B_15 Sch=an[1]
 set_property -dict { PACKAGE_PIN T9    IOSTANDARD LVCMOS33 } [get_ports { AN[2] }]; #IO_L24P_T3_A01_D17_14 Sch=an[2]
@@ -82,5 +82,14 @@ set_property -dict { PACKAGE_PIN D15   IOSTANDARD LVCMOS33 } [get_ports { o_acce
 
 
 
-#set_property -dict { PACKAGE_PIN D14   IOSTANDARD LVCMOS33 } [get_ports { scl }]; #IO_L1P_T0_AD0P_15 Sch=jb[1]
-#set_property -dict { PACKAGE_PIN F16   IOSTANDARD LVCMOS33 } [get_ports { sda }]; #IO_L14N_T2_SRCC_15 Sch=jb[2]
+set_property -dict { PACKAGE_PIN D14   IOSTANDARD LVCMOS33 } [get_ports { scl }]; #IO_L1P_T0_AD0P_15 Sch=jb[1]
+set_property -dict { PACKAGE_PIN F16   IOSTANDARD LVCMOS33 } [get_ports { sda }]; #IO_L14N_T2_SRCC_15 Sch=jb[2]
+
+# Tell Vivado these are intentionally left without pin/IOSTANDARD
+set_property PACKAGE_PIN "" [get_ports {mst_ports_req_o[*]}]
+set_property IOSTANDARD "LVCMOS33" [get_ports {mst_ports_req_o[*]}]
+
+set_property PACKAGE_PIN "" [get_ports {slv_ports_resp_o[*]}]
+set_property IOSTANDARD "LVCMOS33" [get_ports {slv_ports_resp_o[*]}]
+#set_property SEVERITY {Warning} [get_drc_checks NSTD-1]
+#set_property SEVERITY {Warning} [get_drc_checks UCIO-1]
