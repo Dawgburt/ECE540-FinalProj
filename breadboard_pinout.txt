@@ -2,9 +2,9 @@ pinout for my breadboard with ts
 
 1 - sd_cs
 2 - ctp_int
-3 - ctp_sda
-4 - ctp_rst
-5 - ctp_scl
+3 - ctp_sda - orange
+4 - ctp_rst - teal
+5 - ctp_scl - yellow
 6 - MISO
 7 - LED
 8 - SCK
@@ -12,5 +12,5 @@ pinout for my breadboard with ts
 10 - LCD_RS
 11 - LCD_RST
 12 - LCD_CS
-13 - GND
-14 - VCC
+13 - GND - blk
+14 - VCC - red
