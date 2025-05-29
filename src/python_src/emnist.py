@@ -118,12 +118,12 @@ with tf.device(DEVICE):
     )
 
     # Activate the training
-    history = model.fit(
-        ds_train,
-        epochs=50,
-        validation_data=ds_test,
-        callbacks=[lr_cb, es_cb, ckpt_cb]
-    )
+    # history = model.fit(
+    #     ds_train,
+    #     epochs=50,
+    #     validation_data=ds_test,
+    #     callbacks=[lr_cb, es_cb, ckpt_cb]
+    # )
 
     # Revert to best weights and evaluate to show the final best model performance
     model.load_weights('weight_files/best_emnist.weights.h5')
@@ -144,10 +144,19 @@ with tf.device(DEVICE):
     weights_dict = {}
     for layer in model.layers:
         w = layer.get_weights()
-        if w:
-            weights_dict[f"{layer.name}/kernel"] = w[0]
-            weights_dict[f"{layer.name}/bias"]   = w[1]
+        # BatchNorm layers have 4 arrays: [gamma, beta, mean, variance]
+        if len(w) == 4:
+            weights_dict[f"{layer.name}/gamma"]          = w[0]
+            weights_dict[f"{layer.name}/beta"]           = w[1]
+            weights_dict[f"{layer.name}/moving_mean"]    = w[2]
+            weights_dict[f"{layer.name}/moving_variance"]= w[3]
+        # Conv2D and Dense layers have 2 arrays: [kernel, bias]
+        elif len(w) == 2:
+            weights_dict[f"{layer.name}/kernel"]         = w[0]
+            weights_dict[f"{layer.name}/bias"]           = w[1]
+    # write out the expanded archive
     np.savez('weight_files/emnist_weights.npz', **weights_dict)
+
 
     # save label to character mapping
     label_names = ds_info.features['label'].names
