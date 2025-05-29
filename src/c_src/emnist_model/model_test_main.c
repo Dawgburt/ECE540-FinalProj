@@ -4,10 +4,10 @@
 #include <string.h>
 
 #define STB_IMAGE_IMPLEMENTATION
-#include "stb_image.h"           // put stb_image.h in your c_src folder
+#include "stb_image.h"
 
-#include "model.h"               // declares predict() and IMG_H, IMG_W, DENSE2_OUT
-#include "weights.h"    // your generated header with macros + arrays
+#include "model.h"
+#include "weights.h"
 
 // Nearest-neighbor resize for a single-channel image
 static unsigned char* resize_nn(const unsigned char* in, int w, int h, int new_w, int new_h) {
@@ -35,7 +35,7 @@ int main(int argc, char **argv) {
 
     const char* filepath = "src/python_src/test_imgs/0.jpg";
 
-    // 1) Load image as 1-channel (grayscale)
+    // Load image as 1-channel (grayscale)
     int w, h, channels;
     unsigned char* data = stbi_load(filepath, &w, &h, &channels, 1);
     if (!data) {
@@ -43,7 +43,7 @@ int main(int argc, char **argv) {
         return 1;
     }
 
-    // 2) Resize if needed
+    // Resize if needed
     if (w != IMG_W || h != IMG_H) {
         unsigned char* resized = resize_nn(data, w, h, IMG_W, IMG_H);
         stbi_image_free(data);
@@ -52,9 +52,9 @@ int main(int argc, char **argv) {
         h = IMG_H;
     }
 
-    // 3) Prepare float image buffer
+    // Prepare matrix
     float img[IMG_H][IMG_W];
-    // Copy & normalize
+    // Copy and normalize
     for (int y = 0; y < IMG_H; ++y) {
         for (int x = 0; x < IMG_W; ++x) {
             img[y][x] = data[y * IMG_W + x] / 255.0f;
@@ -62,7 +62,7 @@ int main(int argc, char **argv) {
     }
     free(data);
 
-    // 4) Transpose + flip left-right
+    // Transpose + flip across vertical axis
     float tmp[IMG_H][IMG_W];
     // Transpose
     for (int y = 0; y < IMG_H; ++y)
@@ -73,11 +73,11 @@ int main(int argc, char **argv) {
         for (int x = 0; x < IMG_W; ++x)
             img[y][x] = tmp[y][IMG_W - 1 - x];
 
-    // 5) Run inference
+    // Run inference
     float out[DENSE2_OUT];
     predict(img, out);
 
-    // 6) Find the highest-probability class
+    // Find the highest-probability class
     int best = 0;
     for (int i = 1; i < DENSE2_OUT; ++i) {
         if (out[i] > out[best]) best = i;
