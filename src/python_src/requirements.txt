@@ -3,3 +3,4 @@ wheel
 tensorflow
 tensorflow-datasets
 numpy
+pillow
