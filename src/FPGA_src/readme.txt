@@ -8,6 +8,17 @@ VCC JB[6] -> VCC
 You need 4.7k Ohm pullup resistors going from the FPGA pmod pins JB1 to 3.3 VCC. You also need one between JB2 and 3.3 VCC.
 This is required for the i2c to work.
 
+You might need to toggle ctp_reset at some point, to restart the touchscreen.
+You could simply ground it out on another device to pull it low possibly but I used an RPI5. GPIO17. you can use the terminal on the RPI5 to toggle that.
+GPIO17 on RPI5 -> Ctp_reset on touchscreen
+commands:
+pinctrl set 17 op
+pinctrl set 17 dl
+#wait 1 second
+pinctrl set 17 dh
+
+this sets gpio17 as an output, then turns it low, then high, which toggles it.
+
 // Code for talking to the FT6336U over I2c
 // Current State (5/31/2025): response is 0x03, but that means the touchscreen is off, so its a response but not what we want? more research is needed
 
