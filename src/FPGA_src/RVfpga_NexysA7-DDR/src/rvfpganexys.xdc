@@ -82,14 +82,14 @@ set_property -dict { PACKAGE_PIN D15   IOSTANDARD LVCMOS33 } [get_ports { o_acce
 
 
 
-set_property -dict { PACKAGE_PIN D14   IOSTANDARD LVCMOS33 } [get_ports { scl }]; #IO_L1P_T0_AD0P_15 Sch=jb[1]
-set_property -dict { PACKAGE_PIN F16   IOSTANDARD LVCMOS33 } [get_ports { sda }]; #IO_L14N_T2_SRCC_15 Sch=jb[2]
+set_property -dict { PACKAGE_PIN D14   IOSTANDARD LVCMOS33 } [get_ports { scl_io}]; #IO_L1P_T0_AD0P_15 Sch=jb[1]
+set_property -dict { PACKAGE_PIN F16   IOSTANDARD LVCMOS33 } [get_ports { sda_io }]; #IO_L14N_T2_SRCC_15 Sch=jb[2]
 
 # Tell Vivado these are intentionally left without pin/IOSTANDARD
-set_property PACKAGE_PIN "" [get_ports {mst_ports_req_o[*]}]
-set_property IOSTANDARD "LVCMOS33" [get_ports {mst_ports_req_o[*]}]
+#set_property PACKAGE_PIN "" [get_ports {mst_ports_req_o[*]}]
+#set_property IOSTANDARD "LVCMOS33" [get_ports {mst_ports_req_o[*]}]
 
-set_property PACKAGE_PIN "" [get_ports {slv_ports_resp_o[*]}]
-set_property IOSTANDARD "LVCMOS33" [get_ports {slv_ports_resp_o[*]}]
+#set_property PACKAGE_PIN "" [get_ports {slv_ports_resp_o[*]}]
+#set_property IOSTANDARD "LVCMOS33" [get_ports {slv_ports_resp_o[*]}]
 #set_property SEVERITY {Warning} [get_drc_checks NSTD-1]
 #set_property SEVERITY {Warning} [get_drc_checks UCIO-1]
