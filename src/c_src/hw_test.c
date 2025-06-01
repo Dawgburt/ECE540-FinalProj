@@ -1,32 +1,3 @@
-This is a readme for connecting the FT6336U I2C to the Nexys A7 100T FPGA.
-FPGA pmod pins -> touchscreen pins
-POWER / GND
-JB[6] -> VCC   (3.3V power supply to touchscreen)
-JB[5] -> GND   (Ground)
-
-I2C
-JB[1]    -> CTP_SCL     (I2C Clock)        → `scl`      → FPGA pin D14
-JB[2]    -> CTP_SDA     (I2C Data)         → `sda`      → FPGA pin F16
-JB[10]   -> CTP_RST     (Reset control)    → `ctp_rst`  → `gpio_out[0]` → FPGA pin H16
-
-
-SPI
-JB[3]    -> LCD_SCK     (SPI Clock)        → `o_flash_sclk` → FPGA pin G16
-JB[4]    -> LCD_MOSI    (SPI Data Out)     → `o_flash_mosi` → FPGA pin H14
-JB[7]    -> LCD_CS      (Chip Select)      → `o_flash_cs_n` → FPGA pin E16
-JB[8]    -> LCD_DC      (D/C control)      → `lcd_dc`       → `gpio_out[15]` → FPGA pin F13
-JB[9]    -> LCD_RST     (LCD Reset)        → `lcd_rst`      → `gpio_out[14]` → FPGA pin G13
-
-**IMPORTANT**
-You need 4.7k Ohm pullup resistors going from the FPGA pmod pins JB1 to 3.3 VCC. You also need one between JB2 and 3.3 VCC.
-This is required for the i2c to work.
-
-
-
-// THIS CODE HAS WAYS OF COMMUNICATING WITH I2C, SPI and GPIO. To toggle LCD_DC, LCD_RST, and CTP_RST, 
-// you will need to write to the GPIO_OUT0 peripheral that is the default GPIO for 
-// the rvfpganexys.sv
-
 #include <stdint.h>
 #include "uart.h"
 #include "ee_printf.h"
@@ -252,3 +223,4 @@ int main() {
 
     return 0;
 }
+
