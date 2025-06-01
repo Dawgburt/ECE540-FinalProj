@@ -162,6 +162,7 @@ module veerwolf_core
     // I2C Touchscreen external lines
     output wire        scl,
     inout  wire        sda,
+    
 
     // Wishbone I2C signals exposed to top-level
     output wire [31:0] wb_i2c_ts_adr_o,
