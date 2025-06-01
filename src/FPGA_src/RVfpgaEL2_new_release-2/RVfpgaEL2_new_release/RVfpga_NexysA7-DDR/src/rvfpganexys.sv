@@ -54,7 +54,10 @@ module rvfpganexys
     input wire         i_accel_miso,
     output wire        accel_sclk,
 	output logic scl,
-	inout  wire  sda
+	inout  wire  sda,
+	output wire lcd_dc,    // Data/Command control
+output wire lcd_rst    // Reset pin
+
 
     );
 
@@ -272,6 +275,9 @@ module rvfpganexys
    always @(posedge clk_core) begin
       o_led[15:0] <= gpio_out[15:0];
    end
+   
+assign lcd_rst = gpio_out[0];
+assign lcd_dc  = gpio_out[1];
 
 
    assign o_uart_tx = 1'b0 ? litedram_tx : cpu_tx;
