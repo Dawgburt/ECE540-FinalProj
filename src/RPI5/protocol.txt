@@ -1,0 +1,24 @@
+🧠 Simplified Protocol (Recommended for Your Use Case)
+We can drop the pixel request-response mechanism entirely.
+
+✅ New Protocol Plan:
+GPIO Bit(s)    Function
+[7:0]    Pixel data (value 0–255)
+8    data_valid (from Pi)
+9    data_ack (from FPGA)
+10    end_of_image (set by Pi for final pixel)
+
+Total = 11 GPIO pins (easily fits in your 14-pin bus)
+
+🧠 Workflow
+Pi writes a pixel to GPIO[7:0] and sets data_valid = 1
+
+FPGA sees data_valid = 1, reads pixel, sets data_ack = 1
+
+Pi waits for data_ack = 1, then clears data_valid = 0
+
+FPGA sees data_valid = 0, clears data_ack = 0
+
+Repeat for next pixel
+
+After last pixel, Pi sets end_of_image = 1 for 1 cycle
