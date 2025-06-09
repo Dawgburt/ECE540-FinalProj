@@ -1,0 +1,22 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "(gdb) Launch model_test_main",
+      "type": "cppdbg",
+      "request": "launch",
+      // point this at the executable CMake just built:
+      "program": "${workspaceFolder}/build/model_test_main",
+      "args": [],
+      "stopAtEntry": false,
+      "cwd": "${workspaceFolder}",
+      "environment": [],
+      "externalConsole": false,
+      "MIMode": "gdb",
+      // adjust if gdb lives somewhere else on your PATH
+      "miDebuggerPath": "/usr/bin/gdb",
+      // build before debugging
+      "preLaunchTask": "CMake Build"
+    }
+  ]
+}

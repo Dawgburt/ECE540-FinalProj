@@ -21,6 +21,9 @@
 //
 //********************************************************************************
 
+// SPDX-License-Identifier: Apache-2.0
+// Copyright ...
+
 `default_nettype none
 module veerwolf_core
   #(parameter bootrom_file  = "",
@@ -30,40 +33,34 @@ module veerwolf_core
 
 `ifdef Pipeline
    output logic [31:0] ifu_fetch_data_f,
-   output logic [31:0]                            q2,q1,q0,
-   output logic [31:0]        i0_inst_d,
-   output logic [31:0]        i0_inst_x,
-   output logic [31:0]        i0_inst_r,
-   output logic [31:0]        i0_inst_wb_in,
-   output logic [31:0]        i0_inst_wb,
-   output logic [4:0]  dec_i0_rs1_d,
-   output logic [4:0]  dec_i0_rs2_d,
-   output logic  [31:0] gpr_i0_rs1_d,
-   output logic  [31:0] gpr_i0_rs2_d,
-   output logic [31:0]                i0_rs1_d,  i0_rs2_d,
-   output logic [31:0]                muldiv_rs1_d,
-   output logic [31:0] exu_i0_result_x,
-   output logic               [31:0]    result,
-   output logic                       mul_valid_x,
-   output logic [4:0]  dec_i0_waddr_r,
-   output logic        dec_i0_wen_r,
+   output logic [31:0] q2,q1,q0,
+   output logic [31:0] i0_inst_d, i0_inst_x, i0_inst_r,
+   output logic [31:0] i0_inst_wb_in, i0_inst_wb,
+   output logic [4:0] dec_i0_rs1_d, dec_i0_rs2_d,
+   output logic [31:0] gpr_i0_rs1_d, gpr_i0_rs2_d,
+   output logic [31:0] i0_rs1_d, i0_rs2_d,
+   output logic [31:0] muldiv_rs1_d, exu_i0_result_x,
+   output logic [31:0] result,
+   output logic mul_valid_x,
+   output logic [4:0] dec_i0_waddr_r,
+   output logic dec_i0_wen_r,
    output logic [31:0] dec_i0_wdata_r,
-   output logic [31:0]        rs1_d,
-   output logic [11:0]        offset_d,
-   output logic [31:0]        full_addr_d,
-   output logic [31:0]                i0_rs1_bypass_data_d,
-   output logic [31:0]                i0_rs2_bypass_data_d,
-   output logic [31:0]               lsu_result_m,
-   output logic [4:0]                dec_nonblock_load_waddr,
-   output logic                      dec_nonblock_load_wen,
-   output logic [31:0]               lsu_nonblock_load_data,
-   output   logic [31:0] exu_div_result,
-   output   logic        exu_div_wren,
-   output   logic [4:0]  div_waddr_wb,
-   output logic                       i0_rs1_bypass_en_d,
-   output logic                       i0_rs2_bypass_en_d,
-   output logic                       dec_i0_rs1_en_d,
-   output logic                       dec_i0_rs2_en_d,
+   output logic [31:0] rs1_d,
+   output logic [11:0] offset_d,
+   output logic [31:0] full_addr_d,
+   output logic [31:0] i0_rs1_bypass_data_d,
+   output logic [31:0] i0_rs2_bypass_data_d,
+   output logic [31:0] lsu_result_m,
+   output logic [4:0] dec_nonblock_load_waddr,
+   output logic dec_nonblock_load_wen,
+   output logic [31:0] lsu_nonblock_load_data,
+   output logic [31:0] exu_div_result,
+   output logic exu_div_wren,
+   output logic [4:0] div_waddr_wb,
+   output logic i0_rs1_bypass_en_d,
+   output logic i0_rs2_bypass_en_d,
+   output logic dec_i0_rs1_en_d,
+   output logic dec_i0_rs2_en_d,
    output logic alu_instd,
    output logic lsu_instd,
    output logic mul_instd,
@@ -74,40 +71,39 @@ module veerwolf_core
    output logic Bypass0_lsu_nonblock_load_data,
    output logic Bypass1_exu_i0_result_x,
    output logic Bypass1_lsu_nonblock_load_data,
-   output logic                         actual_taken,
-   output logic                         any_branch,
-`endif
-
-`ifdef Pipeline
+   output logic actual_taken,
+   output logic any_branch,
    output logic [2:0] instr_control,
 `endif
 
 `ifdef ViDBo
-    input wire [31:0]  i_data,
+    input  wire [31:0] i_data,
     output wire [31:0] o_data,
     output wire        tf_push,
     output wire [7:0]  wb_m2s_uart_dat_output,
 `elsif Pipeline
-    input wire [31:0]  i_data,
+    input  wire [31:0] i_data,
     output wire [31:0] o_data,
 `else
-    inout wire [31:0]  io_data,
+    inout  wire [31:0] io_data,
 `endif
 
-    input wire 	clk,
-    input wire 	       rstn,
-    input wire 	       dmi_reg_en,
-    input wire [6:0]   dmi_reg_addr,
-    input wire 	       dmi_reg_wr_en,
-    input wire [31:0]  dmi_reg_wdata,
+    input  wire        clk,
+    input  wire        rstn,
+    input  wire        dmi_reg_en,
+    input  wire [6:0]  dmi_reg_addr,
+    input  wire        dmi_reg_wr_en,
+    input  wire [31:0] dmi_reg_wdata,
     output wire [31:0] dmi_reg_rdata,
-    input wire 	       dmi_hard_reset,
+    input  wire        dmi_hard_reset,
     output wire        o_flash_sclk,
     output wire        o_flash_cs_n,
     output wire        o_flash_mosi,
-    input wire         i_flash_miso,
-    input wire 	       i_uart_rx,
+    input  wire        i_flash_miso,
+    input  wire        i_uart_rx,
     output wire        o_uart_tx,
+
+    // RAM AXI
     output wire [5:0]  o_ram_awid,
     output wire [31:0] o_ram_awaddr,
     output wire [7:0]  o_ram_awlen,
@@ -119,7 +115,8 @@ module veerwolf_core
     output wire [3:0]  o_ram_awregion,
     output wire [3:0]  o_ram_awqos,
     output wire        o_ram_awvalid,
-    input wire 	       i_ram_awready,
+    input  wire        i_ram_awready,
+
     output wire [5:0]  o_ram_arid,
     output wire [31:0] o_ram_araddr,
     output wire [7:0]  o_ram_arlen,
@@ -131,34 +128,56 @@ module veerwolf_core
     output wire [3:0]  o_ram_arregion,
     output wire [3:0]  o_ram_arqos,
     output wire        o_ram_arvalid,
-    input wire 	       i_ram_arready,
+    input  wire        i_ram_arready,
+
     output wire [63:0] o_ram_wdata,
     output wire [7:0]  o_ram_wstrb,
     output wire        o_ram_wlast,
     output wire        o_ram_wvalid,
-    input wire 	       i_ram_wready,
-    input wire [5:0]   i_ram_bid,
-    input wire [1:0]   i_ram_bresp,
-    input wire 	       i_ram_bvalid,
+    input  wire        i_ram_wready,
+
+    input  wire [5:0]  i_ram_bid,
+    input  wire [1:0]  i_ram_bresp,
+    input  wire        i_ram_bvalid,
     output wire        o_ram_bready,
-    input wire [5:0]   i_ram_rid,
-    input wire [63:0]  i_ram_rdata,
-    input wire [1:0]   i_ram_rresp,
-    input wire 	       i_ram_rlast,
-    input wire 	       i_ram_rvalid,
+
+    input  wire [5:0]  i_ram_rid,
+    input  wire [63:0] i_ram_rdata,
+    input  wire [1:0]  i_ram_rresp,
+    input  wire        i_ram_rlast,
+    input  wire        i_ram_rvalid,
     output wire        o_ram_rready,
-    input wire 	       i_ram_init_done,
-    input wire 	       i_ram_init_error,
-    output wire [ 7          :0] AN,
-    output wire [ 6          :0] Digits_Bits,
+
+    input  wire        i_ram_init_done,
+    input  wire        i_ram_init_error,
+
+    output wire [7:0]  AN,
+    output wire [6:0]  Digits_Bits,
+
     output wire        o_accel_sclk,
     output wire        o_accel_cs_n,
     output wire        o_accel_mosi,
-    input wire         i_accel_miso,
-	output wire scl,
-	inout  wire  sda
+    input  wire        i_accel_miso,
 
-    );
+    // I2C Touchscreen external lines
+    output wire        scl,
+    inout  wire        sda,
+
+    // Wishbone I2C signals exposed to top-level
+    output wire [31:0] wb_i2c_ts_adr_o,
+    output wire [31:0] wb_i2c_ts_dat_o,
+    output wire [3:0]  wb_i2c_ts_sel_o,
+    output wire        wb_i2c_ts_we_o,
+    output wire        wb_i2c_ts_cyc_o,
+    output wire        wb_i2c_ts_stb_o,
+    output wire [2:0]  wb_i2c_ts_cti_o,
+    output wire [1:0]  wb_i2c_ts_bte_o,
+    input  wire [31:0] wb_i2c_ts_dat_i,
+    input  wire        wb_i2c_ts_ack_i,
+    input  wire        wb_i2c_ts_err_i,
+    input  wire        wb_i2c_ts_rty_i
+);
+
 
 
    localparam BOOTROM_SIZE = 32'h1000;
@@ -326,22 +345,62 @@ module veerwolf_core
 
    wire [7:0]              spi_rdt;
    assign wb_s2m_spi_flash_dat = {24'd0,spi_rdt};
+// Internal I2C wires (Wishbone + bidir)
+wire [31:0] wb_i2c_ts_adr_i;
+wire [31:0] wb_i2c_ts_dat_i_internal;
+wire [3:0]  wb_i2c_ts_sel_i;
+wire        wb_i2c_ts_we_i;
+wire        wb_i2c_ts_cyc_i;
+wire        wb_i2c_ts_stb_i;
+wire [2:0]  wb_i2c_ts_cti_i;
+wire [1:0]  wb_i2c_ts_bte_i;
+
+wire [31:0] wb_i2c_ts_dat_o_internal;
+wire        wb_i2c_ts_ack_o_internal;
+wire        wb_i2c_ts_err_o_internal;
+wire        wb_i2c_ts_rty_o_internal;
+
+// Assign to output ports
+assign wb_i2c_ts_adr_o = wb_i2c_ts_adr_i;
+assign wb_i2c_ts_dat_o = wb_i2c_ts_dat_i_internal;
+assign wb_i2c_ts_sel_o = wb_i2c_ts_sel_i;
+assign wb_i2c_ts_we_o  = wb_i2c_ts_we_i;
+assign wb_i2c_ts_cyc_o = wb_i2c_ts_cyc_i;
+assign wb_i2c_ts_stb_o = wb_i2c_ts_stb_i;
+assign wb_i2c_ts_cti_o = wb_i2c_ts_cti_i;
+assign wb_i2c_ts_bte_o = wb_i2c_ts_bte_i;
+
+assign wb_i2c_ts_dat_i = wb_i2c_ts_dat_o_internal;
+assign wb_i2c_ts_ack_i = wb_i2c_ts_ack_o_internal;
+assign wb_i2c_ts_err_i = wb_i2c_ts_err_o_internal;
+assign wb_i2c_ts_rty_i = wb_i2c_ts_rty_o_internal;
+
+// Bidirectional pads for I2C
+wire scl_pad_i, scl_pad_o, scl_padoen_o;
+wire sda_pad_i, sda_pad_o, sda_padoen_o;
+
+assign scl_pad_i = scl;                           // Input from pin
+assign scl       = scl_padoen_o ? 1'bz : scl_pad_o; // Drive or tri-state
+
+assign sda_pad_i = sda;
+assign sda       = sda_padoen_o ? 1'bz : sda_pad_o;
 
 
-wb_i2c_ts i2c_ts_inst (
-    .wb_clk_i      (wb_clk),
-    .wb_rst_i      (wb_rst),
-    .wb_adr_i      (wb_m2s_i2c_ts_adr[7:2]),   // Assuming word-aligned addresses
-    .wb_dat_i      (wb_m2s_i2c_ts_dat),
-    .wb_dat_o      (wb_s2m_i2c_ts_dat),
-    .wb_sel_i      (wb_m2s_i2c_ts_sel),
-    .wb_we_i       (wb_m2s_i2c_ts_we),
-    .wb_cyc_i      (wb_m2s_i2c_ts_cyc),
-    .wb_stb_i      (wb_m2s_i2c_ts_stb),
-    .wb_ack_o      (wb_s2m_i2c_ts_ack),
-    .scl           (scl),
-    .sda           (sda)
+i2c_wrapper i2c_touchscreen (
+    .wb_clk_i     (wb_clk),
+    .wb_rst_i     (wb_rst),
+    .wb_adr_i     (wb_m2s_i2c_ts_adr[4:2]),
+    .wb_dat_i     (wb_m2s_i2c_ts_dat[7:0]),
+    .wb_dat_o     (wb_s2m_i2c_ts_dat[7:0]),
+    .wb_we_i      (wb_m2s_i2c_ts_we),
+    .wb_stb_i     (wb_m2s_i2c_ts_stb),
+    .wb_cyc_i     (wb_m2s_i2c_ts_cyc),
+    .wb_ack_o     (wb_s2m_i2c_ts_ack),
+    .scl_io       (scl),
+    .sda_io       (sda)
 );
+
+
 
 
    simple_spi spi
@@ -823,6 +882,20 @@ wb_i2c_ts i2c_ts_inst (
 	  
 	  
 
+// Connect I2C touch Wishbone signals
+assign wb_i2c_ts_adr_i = wb_m2s_i2c_ts_adr;
+assign wb_i2c_ts_dat_i_internal = wb_m2s_i2c_ts_dat;
+assign wb_i2c_ts_sel_i = wb_m2s_i2c_ts_sel;
+assign wb_i2c_ts_we_i  = wb_m2s_i2c_ts_we;
+assign wb_i2c_ts_cyc_i = wb_m2s_i2c_ts_cyc;
+assign wb_i2c_ts_stb_i = wb_m2s_i2c_ts_stb;
+assign wb_i2c_ts_cti_i = wb_m2s_i2c_ts_cti;
+assign wb_i2c_ts_bte_i = wb_m2s_i2c_ts_bte;
+
+assign wb_s2m_i2c_ts_dat = wb_i2c_ts_dat_o_internal;
+assign wb_s2m_i2c_ts_ack = wb_i2c_ts_ack_o_internal;
+assign wb_s2m_i2c_ts_err = wb_i2c_ts_err_o_internal;
+assign wb_s2m_i2c_ts_rty = wb_i2c_ts_rty_o_internal;
 
 
 endmodule
