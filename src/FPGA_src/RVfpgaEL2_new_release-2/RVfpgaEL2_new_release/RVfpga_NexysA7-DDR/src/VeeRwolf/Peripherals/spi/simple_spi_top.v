@@ -68,6 +68,7 @@
 
 module simple_spi #(
   parameter SS_WIDTH = 1
+  parameter LCD_COMMAND_DELAY = 24'hFFFFFF
 )(
   // 8bit WISHBONE bus slave interface
   input  wire       clk_i,         // clock
@@ -114,6 +115,26 @@ module simple_spi #(
   // Wishbone interface
   wire wb_acc = cyc_i & stb_i;       // WISHBONE access
   wire wb_wr  = wb_acc & we_i;       // WISHBONE write access
+
+// Add LCD timing control
+reg [23:0] lcd_delay_cnt;
+reg lcd_delay_active;
+
+always @(posedge clk_i) begin
+    if (rst_i) begin
+        lcd_delay_cnt <= 0;
+        lcd_delay_active <= 0;
+    end else if (lcd_delay_active) begin
+        if (lcd_delay_cnt == LCD_COMMAND_DELAY) begin
+            lcd_delay_active <= 0;
+        end else begin
+            lcd_delay_cnt <= lcd_delay_cnt + 1;
+        end
+    end else if (adr_i[2] && we_i) begin  // LCD command
+        lcd_delay_cnt <= 0;
+        lcd_delay_active <= 1;
+    end
+end
 
   // dat_i
   always @(posedge clk_i)
@@ -262,7 +283,7 @@ module simple_spi #(
 
   // transfer statemachine
   always @(posedge clk_i)
-    if (~spe | rst_i)
+    if (rst_i)
       begin
           state <= 2'b00; // idle
           bcnt  <= 3'h0;
@@ -271,6 +292,11 @@ module simple_spi #(
           rfwe  <= 1'b0;
           sck_o <= 1'b0;
       end
+	else if (lcd_delay_active)
+	  begin
+		// Hold during LCD delay
+        state <= state;
+      end 
     else
       begin
          wfre <= 1'b0;
@@ -332,4 +358,3 @@ module simple_spi #(
   assign tirq = ~|tcnt & rfwe;
 
 endmodule
-
